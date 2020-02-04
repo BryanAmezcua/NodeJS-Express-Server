@@ -1,11 +1,14 @@
 // dependencies for Express Server
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 5000;
+
+// setting GET request to YELP API
+const request = require('request');
 
 // set up listener, Port 5000
-app.listen(port, () => { console.log("Listening on port 5000") });
-
+app.listen(5000, () => {
+    console.log("Listening on port 5000");
+});
 
 // Format 
 function getYelpData (callBack) {
@@ -28,20 +31,12 @@ function getYelpData (callBack) {
         }
     };
     
-    // setting GET request to YELP API
-    const request = require('request');
-
-
-    // Make API request
     request(options, handleResponse);
 }
 
-
-
-// Send API results to "localhost:50000/results"
-app.get('/results', function (req, res) {
+app.get('/results', function (request, response) {
 
     getYelpData(function(data) {
-        res.json( {data: data} );
+        response.send(data);
     });
 });
