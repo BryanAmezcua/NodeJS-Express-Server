@@ -1,6 +1,8 @@
-// dependencies for Express Server
+// dependencies for Express Server & query string parsing
 const express = require('express');
 const app = express();
+var url = require('url');
+const apiURL = 'https://api.yelp.com/v3/businesses/search?term=restaurants&location=Malibu&limit=1';
 
 // setting GET request to YELP API
 const request = require('request');
@@ -10,7 +12,7 @@ app.listen(5000, () => {
     console.log("Listening on port 5000");
 });
 
-
+// This helps bypass any cross origin issues
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -37,13 +39,15 @@ function getYelpData (callBack) {
             'Authorization': 'Bearer 4FphwD6tGKVKOyAcxCMxlrhlXEYAPHOQmdQ1q36R8hjaReA7L_Na6lGdZQyV3jJkZHqW0ejiDp5t0LgojC5Cj34nPNcKKJIS2hwYmYkUO1bjq0Pi2zOYRDRx-A0yXnYx'
         }
     };
-    
+
     request(options, handleResponse);
 }
 
 app.get('/results', function (request, response) {
+    console.log('BRYAN TESTING -------------------------------------------------------------------');
+    console.log(response.req.query);
 
     getYelpData(function(data) {
-        response.send(data);
+        response.send(response.req.query);
     });
 });
